@@ -1,0 +1,9 @@
+# Preserve user settings and uploaded files across deployments
+config_data.php
+profile.jpg
+background.mp4
+music.mp3
+music-icon.png
+
+# Optional: Keep backups directory
+backups/

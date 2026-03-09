@@ -1,0 +1,66 @@
+# SUBHAN DEV Portal - Server Configuration
+# This file ensures your settings persist across server restarts
+
+# Enable PHP error logging (not display)
+php_flag display_errors Off
+php_flag log_errors On
+
+# Set default index file
+DirectoryIndex index.php
+
+# Protect config.php from direct access (security)
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Protect upload.php from direct browser access
+<Files "upload.php">
+    Order Allow,Deny
+    Deny from all
+    # Allow only POST requests
+    <LimitExcept POST>
+        Deny from all
+    </LimitExcept>
+</Files>
+
+# Enable file uploads
+php_value upload_max_filesize 100M
+php_value post_max_size 100M
+php_value max_execution_time 300
+php_value max_input_time 300
+
+# Enable sessions
+php_flag session.auto_start Off
+php_value session.gc_maxlifetime 86400
+
+# Character encoding
+AddDefaultCharset UTF-8
+
+# Prevent directory listing
+Options -Indexes
+
+# Enable symbolic links if needed
+Options +FollowSymlinks
+
+# File type handling
+<IfModule mod_mime.c>
+    AddType audio/mpeg .mp3
+    AddType video/mp4 .mp4
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+</IfModule>
+
+# Cache control for media files
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType video/mp4 "access plus 1 month"
+    ExpiresByType audio/mpeg "access plus 1 month"
+</IfModule>
+
+# Compress files for faster loading
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript
+</IfModule>
