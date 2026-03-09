@@ -52,7 +52,6 @@ if ($isLoggedIn && isset($_GET['delete_file'])) {
     }
 }
 
-<?php
 // Load Analytics
 require_once 'analytics.php';
 $analytics = getAnalyticsSummary();
