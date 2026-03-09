@@ -3,6 +3,21 @@ session_start();
 
 $config = include 'config.php';
 
+// Handle Analytics Export
+if ($isLoggedIn && isset($_GET['export_analytics'])) {
+    require_once 'analytics.php';
+    exportAnalytics();
+    exit;
+}
+
+// Handle Analytics Reset
+if ($isLoggedIn && isset($_GET['reset_analytics'])) {
+    require_once 'analytics.php';
+    resetAnalytics();
+    header('Location: admin.php?reset=success');
+    exit;
+}
+
 // Handle Login
 if (isset($_POST['login'])) {
     if ($_POST['username'] === $config['admin']['username'] && 
