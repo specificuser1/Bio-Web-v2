@@ -37,6 +37,107 @@ if ($isLoggedIn && isset($_GET['delete_file'])) {
     }
 }
 
+<?php
+// Load Analytics
+require_once 'analytics.php';
+$analytics = getAnalyticsSummary();
+?>
+
+<!-- Analytics Dashboard -->
+<div class="analytics-dashboard" style="margin-bottom: 40px;">
+    <h2 style="color: #fff; margin-bottom: 25px;">
+        <i class="fas fa-chart-line"></i> Analytics Dashboard
+    </h2>
+    
+    <div class="analytics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <!-- Total Views -->
+        <div class="stat-card" style="background: rgba(30, 30, 30, 0.8); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <i class="fas fa-eye" style="font-size: 32px; color: #10b981; margin-bottom: 10px;"></i>
+            <div style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                <?php echo number_format($analytics['total_views']); ?>
+            </div>
+            <div style="color: #888; font-size: 14px;">Total Views</div>
+        </div>
+        
+        <!-- Unique Visitors -->
+        <div class="stat-card" style="background: rgba(30, 30, 30, 0.8); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <i class="fas fa-users" style="font-size: 32px; color: #3b82f6; margin-bottom: 10px;"></i>
+            <div style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                <?php echo number_format($analytics['unique_visitors']); ?>
+            </div>
+            <div style="color: #888; font-size: 14px;">Unique Visitors</div>
+        </div>
+        
+        <!-- Live Visitors -->
+        <div class="stat-card" style="background: rgba(30, 30, 30, 0.8); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <i class="fas fa-signal" style="font-size: 32px; color: #f59e0b; margin-bottom: 10px; animation: pulse 2s infinite;"></i>
+            <div style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                <?php echo $analytics['live_visitors']; ?>
+            </div>
+            <div style="color: #888; font-size: 14px;">Live Now</div>
+        </div>
+    </div>
+    
+    <!-- Top Countries -->
+    <div class="section" style="background: rgba(30, 30, 30, 0.6); padding: 25px; border-radius: 10px; margin-bottom: 20px;">
+        <h3 style="color: #888; margin-bottom: 15px; font-size: 18px;">
+            <i class="fas fa-globe"></i> Top Countries
+        </h3>
+        <?php foreach ($analytics['top_countries'] as $country => $count): ?>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 8px; background: rgba(20, 20, 20, 0.5); border-radius: 6px;">
+                <span style="color: #fff;"><?php echo $country; ?></span>
+                <span style="color: #10b981; font-weight: 700;"><?php echo $count; ?> visits</span>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    
+    <!-- Device & Browser Stats -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Devices -->
+        <div class="section" style="background: rgba(30, 30, 30, 0.6); padding: 25px; border-radius: 10px;">
+            <h3 style="color: #888; margin-bottom: 15px; font-size: 18px;">
+                <i class="fas fa-mobile-alt"></i> Devices
+            </h3>
+            <?php foreach ($analytics['device_breakdown'] as $device => $count): ?>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #bbb;">
+                    <span><?php echo $device; ?></span>
+                    <strong style="color: #fff;"><?php echo $count; ?></strong>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Browsers -->
+        <div class="section" style="background: rgba(30, 30, 30, 0.6); padding: 25px; border-radius: 10px;">
+            <h3 style="color: #888; margin-bottom: 15px; font-size: 18px;">
+                <i class="fas fa-globe"></i> Browsers
+            </h3>
+            <?php foreach ($analytics['browser_breakdown'] as $browser => $count): ?>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #bbb;">
+                    <span><?php echo $browser; ?></span>
+                    <strong style="color: #fff;"><?php echo $count; ?></strong>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    
+    <!-- Actions -->
+    <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <a href="?export_analytics=1" class="btn" style="background: #3b82f6; padding: 12px 20px; border-radius: 8px; color: white; text-decoration: none; display: inline-block;">
+            <i class="fas fa-download"></i> Export Data
+        </a>
+        <a href="?reset_analytics=1" class="btn" onclick="return confirm('Reset all analytics data?')" style="background: #dc3545; padding: 12px 20px; border-radius: 8px; color: white; text-decoration: none; display: inline-block;">
+            <i class="fas fa-trash"></i> Reset Analytics
+        </a>
+    </div>
+</div>
+
+<style>
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+<style>
+
 // Handle Settings Update
 if ($isLoggedIn && isset($_POST['update_settings'])) {
     $newConfig = $config;
@@ -902,7 +1003,157 @@ if ($isLoggedIn && isset($_GET['delete_link'])) {
                 xhr.open('POST', 'upload.php');
                 xhr.send(formData);
             });
+        }<!-- Color Customization Section -->
+<div class="section">
+    <h3><i class="fas fa-palette"></i> Color Customization</h3>
+    
+    <div style="margin-bottom: 25px;">
+        <h4 style="color: #10b981; margin-bottom: 15px;">Portal Colors</h4>
+        
+        <div class="form-group">
+            <label>Primary Color</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="color" name="color_primary" id="color_primary" 
+                       value="<?php echo htmlspecialchars($config['colors']['primary']); ?>" 
+                       style="width: 60px; height: 40px; border: none; border-radius: 6px; cursor: pointer;">
+                <input type="text" name="color_primary_text" 
+                       value="<?php echo htmlspecialchars($config['colors']['primary']); ?>" 
+                       placeholder="#10b981" 
+                       oninput="document.getElementById('color_primary').value = this.value"
+                       style="flex: 1;">
+            </div>
+            <p class="hint">Main brand color - buttons, links, highlights</p>
+        </div>
+        
+        <div class="form-group">
+            <label>Secondary Color</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="color" name="color_secondary" id="color_secondary" 
+                       value="<?php echo htmlspecialchars($config['colors']['secondary']); ?>" 
+                       style="width: 60px; height: 40px; border: none; border-radius: 6px; cursor: pointer;">
+                <input type="text" name="color_secondary_text" 
+                       value="<?php echo htmlspecialchars($config['colors']['secondary']); ?>" 
+                       placeholder="#888888"
+                       oninput="document.getElementById('color_secondary').value = this.value"
+                       style="flex: 1;">
+            </div>
+            <p class="hint">Secondary elements, borders, subtle text</p>
+        </div>
+        
+        <div class="form-group">
+            <label>Glow Color (Title Effect)</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="color" name="color_glow" id="color_glow" 
+                       value="<?php echo htmlspecialchars($config['colors']['glow_color']); ?>" 
+                       style="width: 60px; height: 40px; border: none; border-radius: 6px; cursor: pointer;">
+                <input type="text" name="color_glow_text" 
+                       value="<?php echo htmlspecialchars($config['colors']['glow_color']); ?>" 
+                       placeholder="#ffffff"
+                       oninput="document.getElementById('color_glow').value = this.value"
+                       style="flex: 1;">
+            </div>
+            <p class="hint">Color of the glowing effect on your name</p>
+        </div>
+        
+        <div class="form-group">
+            <label>Card Background (RGBA format)</label>
+            <input type="text" name="color_card_bg" 
+                   value="<?php echo htmlspecialchars($config['colors']['card_background']); ?>" 
+                   placeholder="rgba(20, 20, 20, 0.95)">
+            <p class="hint">Main container background - supports transparency (rgba)</p>
+        </div>
+        
+        <div class="form-group">
+            <label>Background Overlay (RGBA format)</label>
+            <input type="text" name="color_bg_overlay" 
+                   value="<?php echo htmlspecialchars($config['colors']['background_overlay']); ?>" 
+                   placeholder="rgba(0, 0, 0, 0.85)">
+            <p class="hint">Darkening over video/image background</p>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 25px;">
+        <h4 style="color: #10b981; margin-bottom: 15px;">Quick Preset Themes</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+            <button type="button" onclick="applyTheme('cyber')" class="btn" style="background: linear-gradient(135deg, #FF00FF, #00FFFF); padding: 10px;">
+                Cyberpunk
+            </button>
+            <button type="button" onclick="applyTheme('matrix')" class="btn" style="background: linear-gradient(135deg, #00FF00, #003300); padding: 10px;">
+                Matrix
+            </button>
+            <button type="button" onclick="applyTheme('ocean')" class="btn" style="background: linear-gradient(135deg, #0099FF, #006699); padding: 10px;">
+                Ocean
+            </button>
+            <button type="button" onclick="applyTheme('fire')" class="btn" style="background: linear-gradient(135deg, #FF4500, #FF8C00); padding: 10px;">
+                Fire
+            </button>
+            <button type="button" onclick="applyTheme('purple')" class="btn" style="background: linear-gradient(135deg, #9D4EDD, #7209B7); padding: 10px;">
+                Purple Haze
+            </button>
+            <button type="button" onclick="applyTheme('gold')" class="btn" style="background: linear-gradient(135deg, #FFD700, #FFA500); padding: 10px;">
+                Gold Luxury
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme presets
+const themes = {
+    cyber: {
+        primary: '#FF00FF',
+        secondary: '#00FFFF',
+        glow: '#FF00FF'
+    },
+    matrix: {
+        primary: '#00FF00',
+        secondary: '#003300',
+        glow: '#00FF00'
+    },
+    ocean: {
+        primary: '#0099FF',
+        secondary: '#006699',
+        glow: '#00CCFF'
+    },
+    fire: {
+        primary: '#FF4500',
+        secondary: '#FF8C00',
+        glow: '#FF0000'
+    },
+    purple: {
+        primary: '#9D4EDD',
+        secondary: '#7209B7',
+        glow: '#C77DFF'
+    },
+    gold: {
+        primary: '#FFD700',
+        secondary: '#FFA500',
+        glow: '#FFD700'
+    }
+};
+
+function applyTheme(themeName) {
+    const theme = themes[themeName];
+    document.getElementById('color_primary').value = theme.primary;
+    document.querySelector('input[name="color_primary_text"]').value = theme.primary;
+    document.getElementById('color_secondary').value = theme.secondary;
+    document.querySelector('input[name="color_secondary_text"]').value = theme.secondary;
+    document.getElementById('color_glow').value = theme.glow;
+    document.querySelector('input[name="color_glow_text"]').value = theme.glow;
+    
+    alert('Theme applied! Don\'t forget to Save Settings.');
+}
+
+// Sync color picker with text input
+document.querySelectorAll('input[type="color"]').forEach(picker => {
+    picker.addEventListener('input', function() {
+        const textInput = this.parentElement.querySelector('input[type="text"]');
+        if (textInput) {
+            textInput.value = this.value;
         }
+    });
+});
+</script>
         
         // Initialize file uploads
         handleFileUpload('profileImage', 'profileProgress', 'profileBar', 'profile_image');
