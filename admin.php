@@ -141,6 +141,13 @@ $analytics = getAnalyticsSummary();
 // Handle Settings Update
 if ($isLoggedIn && isset($_POST['update_settings'])) {
     $newConfig = $config;
+
+    // Update color settings
+    $newConfig['colors']['primary'] = $_POST['color_primary_text'];
+    $newConfig['colors']['secondary'] = $_POST['color_secondary_text'];
+    $newConfig['colors']['glow_color'] = $_POST['color_glow_text'];
+    $newConfig['colors']['card_background'] = $_POST['color_card_bg'];
+    $newConfig['colors']['background_overlay'] = $_POST['color_bg_overlay'];
     
     // Update profile settings
     $newConfig['profile']['name'] = $_POST['name'];
